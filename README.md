@@ -22,14 +22,14 @@ Code Execution Monitoring for Tempest applications.
 
 Install the latest version by:
 
-```
+```bash
 composer require inspector-apm/inspector-tempest
 ```
 
 
 <a name="key"></a>
 
-### Configure the Ingestion Key
+## Configure the Ingestion Key
 
 You just need to put the Ingestion Key in your environment file:
 
@@ -38,6 +38,16 @@ INSPECTOR_INGESTION_KEY=[ingestion key]
 ```
 
 You can obtain an `INSPECTOR_INGESTION_KEY` creating a new project in your [Inspector](https://inspector.dev) account.
+
+## Test everything is working
+
+Run the command below:
+
+```bash
+vendor/bin/tempest inspector:test
+```
+
+Go to https://app.inspector.dev to explore your data.
 
 <a name="agentic"></a>
 
