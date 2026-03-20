@@ -63,7 +63,7 @@ client library can do, its configurations, how to use it.
 
 ## Official documentation
 
-**[Check out the official documentation](https://docs.inspector.dev/guides/laravel/installation)**
+**[Check out the official documentation](https://docs.inspector.dev/guides/tempest)**
 
 <a name="contribution"></a>
 
