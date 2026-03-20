@@ -13,8 +13,8 @@ Code Execution Monitoring for Tempest applications.
 
 ## Requirements
 
-- PHP >= 8.1
-- Tempest >= 3.0
+- PHP ^8.5
+- Tempest ^3.0
 
 <a name="install"></a>
 
