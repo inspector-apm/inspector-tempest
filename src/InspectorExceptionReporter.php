@@ -4,6 +4,7 @@ namespace Inspector\Tempest;
 
 use Inspector\Inspector;
 use Tempest\Core\Exceptions\ExceptionReporter;
+use Tempest\Core\ProvidesContext;
 use Throwable;
 
 class InspectorExceptionReporter implements ExceptionReporter
@@ -15,6 +16,10 @@ class InspectorExceptionReporter implements ExceptionReporter
 
     public function report(Throwable $throwable): void
     {
-        $this->inspector->reportException($throwable);
+        $error = $this->inspector->reportException($throwable);
+
+        if ($throwable instanceof ProvidesContext) {
+            $error->setContext($throwable->context());
+        }
     }
 }
