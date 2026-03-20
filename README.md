@@ -1,10 +1,5 @@
 # Inspector | Code Execution Monitoring Tool
 
-[![Total Downloads](https://poser.pugx.org/inspector-apm/inspector-tempest/downloads)](//packagist.org/packages/inspector-apm/inspector-tempest)
-[![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-tempest/v/stable)](https://packagist.org/packages/inspector-apm/inspector-tempest)
-[![License](https://poser.pugx.org/inspector-apm/inspector-tempest/license)](//packagist.org/packages/inspector-apm/inspector-tempest)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
-
 > Before moving on, please consider giving us a GitHub star ⭐️. Thank you!
 
 Code Execution Monitoring for Tempest applications.
