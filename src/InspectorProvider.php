@@ -16,7 +16,7 @@ use Tempest\EventBus\EventHandler;
  * This provider hooks into the kernel boot process to make Inspector available
  * throughout the application for the current execution cycle.
  */
-final readonly class InspectorServiceProvider
+final readonly class InspectorProvider
 {
     public function __construct(
         private Container $container,
