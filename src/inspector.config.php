@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
+use Inspector\Tempest\InspectorConfig;
 use function Tempest\env;
 
-return new \Inspector\Tempest\InspectorConfig(
+return new InspectorConfig(
     ingestionKey: env('INSPECTOR_INGESTION_KEY'),
     url: env('INSPECTOR_URL', 'https://ingest.inspector.dev'),
     enabled: env('INSPECTOR_ENABLED', true),
