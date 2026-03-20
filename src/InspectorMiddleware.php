@@ -57,6 +57,6 @@ final readonly class InspectorMiddleware implements HttpMiddleware
      */
     private function normalizeUri(Request $request): string
     {
-        return strtoupper($request->method->value) . ' /'.trim($request->uri, '/');
+        return strtoupper($request->method->value) . ' /'.trim($request->path, '/');
     }
 }
