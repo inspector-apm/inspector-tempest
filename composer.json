@@ -1,0 +1,66 @@
+{
+    "name": "inspector-apm/inspector-tempest",
+    "description": "Code Execution Monitoring, built for developers.",
+    "keywords": [
+        "monitoring",
+        "php",
+        "inspector",
+        "tempest"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Valerio Barbera",
+            "email": "valerio@inspector.dev"
+        }
+    ],
+    "require": {
+        "php": "^8.5",
+        "tempest/core": "^3.0",
+        "tempest/event-bus": "^3.0",
+        "tempest/http": "^3.0",
+        "tempest/router": "^3.0",
+        "inspector-apm/inspector-php": "^3.16.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "Inspector\\Tempest\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "rector/rector": "^2.2",
+        "tomasvotruba/type-coverage": "^2.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Inspector\\Tempest\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpunit --colors=always"
+        ],
+        "analyse": [
+            "vendor/bin/phpstan analyse -v"
+        ],
+        "format": [
+            "@style",
+            "@refactor"
+        ],
+        "style": [
+            "php-cs-fixer fix --allow-risky=yes"
+        ],
+        "refactor": [
+            "vendor/bin/rector"
+        ]
+    }
+}
