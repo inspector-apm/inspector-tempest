@@ -14,6 +14,9 @@ class InspectorExceptionReporter implements ExceptionReporter
     ){
     }
 
+    /**
+     * @throws \Exception
+     */
     public function report(Throwable $throwable): void
     {
         $error = $this->inspector->reportException($throwable);
