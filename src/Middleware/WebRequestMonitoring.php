@@ -40,9 +40,6 @@ final readonly class WebRequestMonitoring implements HttpMiddleware
             $transaction->setResult((string)$response->status->value);
 
             return $response;
-        } catch (Throwable $e) {
-            $this->inspector->reportException($e);
-            throw $e;
         } finally {
             $this->inspector->flush();
         }
