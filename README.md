@@ -26,6 +26,7 @@ Install the latest version by:
 composer require inspector-apm/inspector-tempest
 ```
 
+Tempest will automatically register the package provider and other library components.
 
 <a name="key"></a>
 
