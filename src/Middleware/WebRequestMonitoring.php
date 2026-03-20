@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Inspector\Tempest;
+namespace Inspector\Tempest\Middleware;
 
 use Inspector\Inspector;
 use Tempest\Core\Priority;
@@ -10,26 +10,21 @@ use Tempest\Http\Request;
 use Tempest\Http\Response;
 use Tempest\Router\HttpMiddleware;
 use Tempest\Router\HttpMiddlewareCallable;
+use Throwable;
 
-/**
- * HTTP middleware that intercepts Tempest HTTP requests and sends monitoring data to Inspector.
- *
- * This middleware retrieves the Inspector instance from the Tempest container (which is
- * registered by InspectorServiceProvider), creates a transaction for each request, captures
- * request/response data, and flushes the data at the end of the cycle.
- *
- * The Inspector instance is available throughout the application via dependency injection,
- * allowing other parts of the code to add segments to the current transaction.
- */
+use function strtoupper;
+use function trim;
+
 #[Priority(Priority::NORMAL)]
-final readonly class InspectorMiddleware implements HttpMiddleware
+final readonly class WebRequestMonitoring implements HttpMiddleware
 {
     public function __construct(
-        private Inspector $inspector,
-    ) {}
+        protected Inspector $inspector,
+    ) {
+    }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function __invoke(Request $request, HttpMiddlewareCallable $next): Response
     {
@@ -45,7 +40,7 @@ final readonly class InspectorMiddleware implements HttpMiddleware
             $transaction->setResult((string)$response->status->value);
 
             return $response;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->inspector->reportException($e);
             throw $e;
         } finally {

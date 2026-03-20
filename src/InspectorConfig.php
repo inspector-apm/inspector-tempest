@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tempest;
 
 class InspectorConfig
@@ -11,6 +13,6 @@ class InspectorConfig
         public int $maxItems = 150,
         public string $transport = 'async',
         public ?string $version = '1.0.0',
-    ){
+    ) {
     }
 }

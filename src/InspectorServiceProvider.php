@@ -21,7 +21,8 @@ final readonly class InspectorServiceProvider
     public function __construct(
         private Container $container,
         private InspectorConfig $config,
-    ) {}
+    ) {
+    }
 
     #[EventHandler(KernelEvent::BOOTED)]
     public function registerInspector(): void
@@ -29,7 +30,7 @@ final readonly class InspectorServiceProvider
         // Register Inspector as a singleton in the container
         $this->container->register(
             Inspector::class,
-            function () {
+            function (): \Inspector\Inspector {
                 $config = new Configuration($this->config->ingestionKey);
                 $config->setUrl($this->config->url);
                 $config->setMaxItems($this->config->maxItems);

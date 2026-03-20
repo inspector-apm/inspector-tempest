@@ -1,0 +1,75 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Inspector\Tempest;
+
+use function is_null;
+use function preg_match;
+use function preg_quote;
+use function str_replace;
+
+class Filters
+{
+    /**
+     * Determine if the given request path info should be monitored.
+     *
+     * @param string[] $notAllowed
+     */
+    public static function isApprovedRequest(array $notAllowed, string $path): bool
+    {
+        foreach ($notAllowed as $pattern) {
+            if (self::matchWithWildcard($path, $pattern)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine if the current command should be monitored.
+     *
+     * @param null|string[] $notAllowed
+     */
+    public static function isApprovedCommand(string $command, ?array $notAllowed): bool
+    {
+        if (is_null($notAllowed)) {
+            return true;
+        }
+
+        foreach ($notAllowed as $pattern) {
+            if (self::matchWithWildcard($command, $pattern)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static function matchWithWildcard(string $value, string $pattern): bool
+    {
+        // Escape special regex characters in the pattern, except for '*'.
+        $escapedPattern = preg_quote($pattern, '/');
+
+        // Replace '*' in the pattern with '.*' for regex matching.
+        $regex = '/^' . str_replace('\*', '.*', $escapedPattern) . '$/';
+
+        // Perform regex match.
+        return (bool)preg_match($regex, $value);
+    }
+
+    /**
+     * Hide the given request parameters.
+     */
+    public static function hideParameters(array $data, array $hidden): array
+    {
+        foreach ($hidden as $parameter) {
+            if (Arr::get($data, $parameter)) {
+                Arr::set($data, $parameter, '********');
+            }
+        }
+
+        return $data;
+    }
+}
