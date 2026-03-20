@@ -34,14 +34,15 @@ final readonly class InspectorMiddleware implements HttpMiddleware
     public function __invoke(Request $request, HttpMiddlewareCallable $next): Response
     {
         $transaction = $this->inspector->startTransaction($this->normalizeUri($request));
-        $transaction->addContext('Headers', $request->headers->toArray());
+        $transaction->addContext('Request Body', $request->body);
 
         try {
             $response = $next($request);
 
-            $transaction->addContext('Response', [
-                'status_code' => $response->status->value,
-            ]);
+            $transaction->addContext('Response', ['headers' => $response->headers])
+                ->addContext('Response Body', $response->body);
+
+            $transaction->setResult((string)$response->status->value);
 
             return $response;
         } catch (\Throwable $e) {
