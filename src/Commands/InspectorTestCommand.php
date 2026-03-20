@@ -62,7 +62,7 @@ class InspectorTestCommand
 
         $this->inspector->addSegment(function () {
             usleep(300000);
-        }, 'db.query', 'SELECT * FRoM users');
+        }, 'db.query', 'SELECT * FROM users');
 
         $this->inspector->reportException(new \Exception('Your first exception'));
 
