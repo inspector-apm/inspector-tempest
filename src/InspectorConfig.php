@@ -13,6 +13,8 @@ class InspectorConfig
         public int $maxItems = 150,
         public string $transport = 'async',
         public ?string $version = '1.0.0',
+        public array $ignoreUrls = [],
+        public array $ignoreCommands = [],
     ) {
     }
 }

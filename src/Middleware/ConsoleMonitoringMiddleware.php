@@ -6,6 +6,9 @@ namespace Inspector\Tempest\Middleware;
 
 use Inspector\Inspector;
 use Inspector\Models\Segment;
+use Inspector\Tempest\Filters;
+use Inspector\Tempest\InspectorConfig;
+use Tempest\Console\ConsoleCommand;
 use Tempest\Console\ConsoleMiddleware;
 use Tempest\Console\ConsoleMiddlewareCallable;
 use Tempest\Console\ExitCode;
@@ -21,8 +24,9 @@ use function strtolower;
 class ConsoleMonitoringMiddleware implements ConsoleMiddleware
 {
     public function __construct(
-        protected Inspector $inspector
-    ){
+        protected Inspector $inspector,
+        protected InspectorConfig $config,
+    ) {
     }
 
     /**
@@ -30,9 +34,13 @@ class ConsoleMonitoringMiddleware implements ConsoleMiddleware
      */
     public function __invoke(Invocation $invocation, ConsoleMiddlewareCallable $next): ExitCode|int
     {
+        if (!$this->shouldBeRecorded($invocation->consoleCommand)) {
+            return $next($invocation);
+        }
+
         if ($this->inspector->canAddSegments()) {
             return $this->inspector->addSegment(function (Segment $segment) use ($invocation, $next): int|ExitCode {
-                $segment->addContext('Arguments', array_map(fn(ConsoleInputArgument $argument) => ['name' => $argument->name, 'value' => $argument->value], $invocation->argumentBag->all()));
+                $segment->addContext('Arguments', array_map(fn (ConsoleInputArgument $argument): array => ['name' => $argument->name, 'value' => $argument->value], $invocation->argumentBag->all()));
 
                 return $next($invocation);
             }, 'command', $invocation->consoleCommand->getName());
@@ -54,5 +62,13 @@ class ConsoleMonitoringMiddleware implements ConsoleMiddleware
         $this->inspector->flush();
 
         return $result;
+    }
+
+    protected function shouldBeRecorded(ConsoleCommand $command): bool
+    {
+        return Filters::isApprovedCommand(
+            $command->getName(),
+            $this->config->ignoreCommands
+        );
     }
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Inspector\Tempest\Middleware;
 
 use Inspector\Inspector;
+use Inspector\Tempest\Filters;
+use Inspector\Tempest\InspectorConfig;
 use Tempest\Core\Priority;
 use Tempest\Http\Request;
 use Tempest\Http\Response;
@@ -20,6 +22,7 @@ final readonly class WebRequestMonitoring implements HttpMiddleware
 {
     public function __construct(
         protected Inspector $inspector,
+        protected InspectorConfig $config,
     ) {
     }
 
@@ -28,6 +31,10 @@ final readonly class WebRequestMonitoring implements HttpMiddleware
      */
     public function __invoke(Request $request, HttpMiddlewareCallable $next): Response
     {
+        if (!$this->shouldBeRecorded($request)) {
+            return $next($request);
+        }
+
         $transaction = $this->inspector->startTransaction($this->normalizeUri($request));
         $transaction->addContext('Request Body', $request->body);
 
@@ -40,6 +47,9 @@ final readonly class WebRequestMonitoring implements HttpMiddleware
             $transaction->setResult((string)$response->status->value);
 
             return $response;
+        } catch (Throwable $e) {
+            $this->inspector->reportException($e);
+            throw $e;
         } finally {
             $this->inspector->flush();
         }
@@ -48,8 +58,16 @@ final readonly class WebRequestMonitoring implements HttpMiddleware
     /**
      * Get the request PATH.
      */
-    private function normalizeUri(Request $request): string
+    protected function normalizeUri(Request $request): string
     {
         return strtoupper($request->method->value) . ' /'.trim($request->path, '/');
+    }
+
+    protected function shouldBeRecorded(Request $request): bool
+    {
+        return Filters::isApprovedRequest(
+            $this->config->ignoreUrls,
+            $request->path,
+        );
     }
 }

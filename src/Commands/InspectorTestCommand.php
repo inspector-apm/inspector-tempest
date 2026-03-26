@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Tempest\Commands;
 
 use Inspector\Configuration;
@@ -8,13 +10,18 @@ use Tempest\Console\Console;
 use Tempest\Console\ConsoleCommand;
 use Tempest\Console\ExitCode;
 use Throwable;
+use Exception;
+
+use function function_exists;
+use function proc_open;
+use function usleep;
 
 class InspectorTestCommand
 {
     public function __construct(
         protected Inspector $inspector,
         protected Console $console
-    ){
+    ) {
     }
 
     /**
@@ -43,12 +50,11 @@ class InspectorTestCommand
         if (!$this->inspector->canAddSegments()) {
             $this->console->warning('❌ Inspector is not enabled');
             return ExitCode::CANCELLED;
-        } else {
-            $this->console->info('✅ Inspector enabled.');
         }
+        $this->console->info('✅ Inspector enabled.');
 
         // Check the Ingestion Key
-        $this->inspector->configure(function (Configuration $config) {
+        $this->inspector->configure(function (Configuration $config): void {
             if ($config->getIngestionKey() === '') {
                 $this->console->warning('INSPECTOR_INGESTION_KEY is not set in your .env file.');
             } else {
@@ -56,15 +62,15 @@ class InspectorTestCommand
             }
         });
 
-        $this->inspector->addSegment(function () {
+        $this->inspector->addSegment(function (): void {
             usleep(500000);
         }, 'segment', 'POST http://localhost:8000/users');
 
-        $this->inspector->addSegment(function () {
+        $this->inspector->addSegment(function (): void {
             usleep(300000);
         }, 'db.query', 'SELECT * FROM users');
 
-        $this->inspector->reportException(new \Exception('Your first exception'));
+        $this->inspector->reportException(new Exception('Your first exception'));
 
         $this->console->warning("Go to the dashboard to check the data: https://app.inspector.dev");
 

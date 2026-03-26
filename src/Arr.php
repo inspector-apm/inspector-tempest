@@ -6,10 +6,10 @@ namespace Inspector\Tempest;
 
 use function array_key_exists;
 use function is_array;
-use function strpos;
 use function array_shift;
 use function count;
 use function explode;
+use function str_contains;
 
 class Arr
 {

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Inspector\Tempest\InspectorConfig;
+
 use function Tempest\env;
 
 return new InspectorConfig(
