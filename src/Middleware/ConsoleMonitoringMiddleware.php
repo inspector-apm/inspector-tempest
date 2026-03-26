@@ -21,7 +21,7 @@ use function array_map;
 use function strtolower;
 
 #[Priority(Priority::HIGH)]
-class ConsoleMonitoringMiddleware implements ConsoleMiddleware
+final readonly class ConsoleMonitoringMiddleware implements ConsoleMiddleware
 {
     public function __construct(
         protected Inspector $inspector,
