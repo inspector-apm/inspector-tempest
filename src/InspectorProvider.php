@@ -30,7 +30,7 @@ final readonly class InspectorProvider
         // Register Inspector as a singleton in the container
         $this->container->register(
             Inspector::class,
-            function (): \Inspector\Inspector {
+            function (): Inspector {
                 $config = new Configuration($this->config->ingestionKey);
                 $config->setUrl($this->config->url);
                 $config->setMaxItems($this->config->maxItems);
